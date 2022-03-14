@@ -12,7 +12,6 @@ pragma solidity ^0.8.4;
 // NFT Count 10000
 
 contract TigerNFT is ERC721A, Ownable, ReentrancyGuard {
-
     using SafeMath for uint256;
     using Strings for uint256;
 
