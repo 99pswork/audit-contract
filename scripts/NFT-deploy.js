@@ -20,13 +20,6 @@ contract("NFT deployment", () => {
 		console.log("NFT deployed at address: ", nft.address);
 	});
 
-	// after(async () => {
-	//     console.log('\u0007');
-	//     console.log('\u0007');
-	//     console.log('\u0007');
-	//     console.log('\u0007');
-	// })
-
 	it("should print contract address", async () => {
 		console.log("NFT deployed at address: ", nft.address);
 	});
