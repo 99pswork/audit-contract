@@ -18,7 +18,7 @@ Tiger NFT ERC721
 ## Background
 
 
-## Install
+## Setup
 
 This project uses hardhat
 
