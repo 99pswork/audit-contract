@@ -6,14 +6,6 @@ Tiger NFT ERC721
 
 - [Background](#background)
 - [Install](#install)
-- [Usage](#usage)
-	- [Generator](#generator)
-- [Badge](#badge)
-- [Example Readmes](#example-readmes)
-- [Related Efforts](#related-efforts)
-- [Maintainers](#maintainers)
-- [Contributing](#contributing)
-- [License](#license)
 
 ## Background
 
@@ -34,18 +26,3 @@ $ npx hardhat compile // Compile Code
 $ npx hardhat node // Start localhost test accounts
 $ npx hardhat test --localhost // Local Deployment & Testing
 ```
-
-### Generator
-
-## Badge
-
-## Example Readmes
-
-## Related Efforts
-
-## Maintainers
-
-## Contributing
-
-### Contributors
-
