@@ -1,7 +1,6 @@
 const fs = require('fs');
 const { web3, ethers } = require('hardhat');
 const CONFIG = require("../scripts/credentials.json");
-// const nftABI = (JSON.parse(fs.readFileSync('./artifacts/contracts/NFT.sol/NFT.json', 'utf8'))).abi;
 
 contract("NFT deployment", () => {
     let nft;
@@ -20,12 +19,6 @@ contract("NFT deployment", () => {
 
     })
 
-    // after(async () => {
-    //     console.log('\u0007');
-    //     console.log('\u0007');
-    //     console.log('\u0007');
-    //     console.log('\u0007');
-    // })
 
     it ("should print contract address", async () => {
       console.log("NFT deployed at address: ",nft.address);

@@ -31,7 +31,7 @@ contract TigerNFT is ERC721A, Ownable, ReentrancyGuard {
     string public NETWORK_PROVENANCE = "";
     string public notRevealedUri;
 
-    uint256 public raffleReward = 1000000000000000000; // 1 ETH - ?
+    uint256 public raffleReward = 1000000000000000000; // 1 ETH 
 
     constructor(string memory name, string memory symbol, uint256 _preSalePrice, uint256 _publicSalePrice, uint256 _maxSupply) ERC721A(name, symbol) ReentrancyGuard() {
         preSalePrice = _preSalePrice;
