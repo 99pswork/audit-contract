@@ -10,3 +10,4 @@ credentials.json
 .env
 ipfs/
 NFT.sol
+.DS_Store
