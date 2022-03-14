@@ -1,6 +1,6 @@
 Tiger NFT ERC721
 
-# Standard Readme
+# The Tiger Clan
 
 ## Table of Contents
 
