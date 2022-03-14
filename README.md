@@ -2,7 +2,6 @@ Tiger NFT ERC721
 
 # The Tiger Clan
 
-- [Background](#background)
 - [Install](#install)
 - [Usage](#usage)
 
