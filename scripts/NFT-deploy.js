@@ -1,16 +1,12 @@
-const fs = require("fs");
-const { web3, ethers } = require("hardhat");
+const { ethers } = require("hardhat");
 const CONFIG = require("../scripts/credentials.json");
 
 contract("NFT deployment", () => {
 	let nft;
-	let tx;
 
 	const provider = new ethers.providers.JsonRpcProvider(
 		CONFIG["RINKEBY"]["URL"]
 	);
-	const signer = new ethers.Wallet(CONFIG["RINKEBY"]["PKEY"]);
-	const account = signer.connect(provider);
 
 	before(async () => {
 		const NFT = await ethers.getContractFactory("NFT");

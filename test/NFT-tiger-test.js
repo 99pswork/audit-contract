@@ -1,6 +1,5 @@
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
-const provider = new ethers.providers.JsonRpcProvider("http://127.0.0.1:8545");
 
 describe("NFT", function () {
 	before(async () => {
@@ -23,7 +22,7 @@ describe("NFT", function () {
 
 	it("Check Base URI Before Reveal", async function () {
 		await expect(nft.tokenURI(0)).to.be.revertedWith(
-			"NFT-Tiger URI For Token Non-existent"
+			"TTC URI For Token Non-existent"
 		);
 	});
 
@@ -53,7 +52,7 @@ describe("NFT", function () {
 			nft
 				.connect(accounts[1])
 				.preSaleMint(1, { value: ethers.utils.parseEther("0.15") })
-		).to.be.revertedWith("NFT-Tiger Pre Sale is not Active");
+		).to.be.revertedWith("TTC Pre Sale is not Active");
 
 		await nft.togglePreSale();
 
@@ -61,7 +60,7 @@ describe("NFT", function () {
 			nft
 				.connect(accounts[1])
 				.preSaleMint(1, { value: ethers.utils.parseEther("0.15") })
-		).to.be.revertedWith("NFT-Tiger Minting is Paused");
+		).to.be.revertedWith("TTC Minting is Paused");
 
 		await nft.togglePauseState();
 
@@ -73,7 +72,7 @@ describe("NFT", function () {
 			nft
 				.connect(accounts[2])
 				.preSaleMint(1, { value: ethers.utils.parseEther("0.10") })
-		).to.be.revertedWith("NFT-Tiger ETH Value Sent for Pre Sale is not enough");
+		).to.be.revertedWith("TTC ETH Value Sent for Pre Sale is not enough");
 
 		await nft
 			.connect(accounts[2])
@@ -85,7 +84,7 @@ describe("NFT", function () {
 			nft
 				.connect(accounts[1])
 				.publicSaleMint(1, { value: ethers.utils.parseEther("0.15") })
-		).to.be.revertedWith("NFT-Tiger Public Sale is not Active");
+		).to.be.revertedWith("TTC Public Sale is not Active");
 		await nft.togglePublicSale();
 
 		await nft
@@ -115,13 +114,13 @@ describe("NFT", function () {
 		await nft.airDrop([accounts[2].address, accounts[2].address]);
 
 		await expect(nft.airDrop([accounts[4].address])).to.be.revertedWith(
-			"NFT-Tiger Maximum Supply Reached"
+			"TTC Maximum Supply Reached"
 		);
 		await expect(
 			nft
 				.connect(accounts[8])
 				.publicSaleMint(1, { value: ethers.utils.parseEther("0.2") })
-		).to.be.revertedWith("NFT-Tiger Maximum Supply Reached");
+		).to.be.revertedWith("TTC Maximum Supply Reached");
 
 		expect(await nft.balanceOf(accounts[2].address)).to.equal(
 			parseInt(balanceAcc1) + 2

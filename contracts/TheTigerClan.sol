@@ -21,9 +21,9 @@ contract TigerNFT is ERC721A, Ownable, ReentrancyGuard {
     bool public paused = true;
     bool public revealed = false;
 
-    uint256 public maxSupply; // 10000
-    uint256 public preSalePrice; // ?
-    uint256 public publicSalePrice; // ?
+    uint256 public maxSupply; 
+    uint256 public preSalePrice; 
+    uint256 public publicSalePrice; 
 
     string private _baseURIextended;
     
@@ -43,23 +43,23 @@ contract TigerNFT is ERC721A, Ownable, ReentrancyGuard {
     }
 
     function preSaleMint(uint256 _amount) external payable nonReentrant{
-        require(preSaleActive, "NFT-Tiger Pre Sale is not Active");
+        require(preSaleActive, "TTC Pre Sale is not Active");
         mint(_amount, true);
     }
 
     function publicSaleMint(uint256 _amount) external payable nonReentrant {
-        require(publicSaleActive, "NFT-Tiger Public Sale is not Active");
+        require(publicSaleActive, "TTC Public Sale is not Active");
         mint(_amount, false);
     }
 
     function mint(uint256 amount,bool state) internal {
-        require(!paused, "NFT-Tiger Minting is Paused");
-        require(totalSupply().add(amount) <= maxSupply, "NFT-Tiger Maximum Supply Reached");
+        require(!paused, "TTC Minting is Paused");
+        require(totalSupply().add(amount) <= maxSupply, "TTC Maximum Supply Reached");
         if(state){
-            require(preSalePrice*amount <= msg.value, "NFT-Tiger ETH Value Sent for Pre Sale is not enough");
+            require(preSalePrice*amount <= msg.value, "TTC ETH Value Sent for Pre Sale is not enough");
         }
         else{
-            require(publicSalePrice*amount <= msg.value, "NFT-Tiger ETH Value Sent for Public Sale is not enough");
+            require(publicSalePrice*amount <= msg.value, "TTC ETH Value Sent for Public Sale is not enough");
         }
         _safeMint(msg.sender, amount);
     }
@@ -93,7 +93,7 @@ contract TigerNFT is ERC721A, Ownable, ReentrancyGuard {
     }
 
     function airDrop(address[] memory _address) external onlyOwner {
-        require(totalSupply().add(_address.length) <= maxSupply, "NFT-Tiger Maximum Supply Reached");
+        require(totalSupply().add(_address.length) <= maxSupply, "TTC Maximum Supply Reached");
         for(uint i=1; i <= _address.length; i++){
             _safeMint(_address[i-1], 1);
         }
@@ -128,7 +128,7 @@ contract TigerNFT is ERC721A, Ownable, ReentrancyGuard {
     }
 
     function tokenURI(uint256 _tokenId) public view virtual override returns (string memory) {
-        require(_exists(_tokenId), "NFT-Tiger URI For Token Non-existent");
+        require(_exists(_tokenId), "TTC URI For Token Non-existent");
         if(!revealed){
             return notRevealedUri;
         }

@@ -4,7 +4,7 @@
 require("@nomiclabs/hardhat-waffle");
 require("@nomiclabs/hardhat-truffle5");
 require("@nomiclabs/hardhat-etherscan");
-const CONFIG = require("./scripts/credentials.json");
+const CONFIG = require("./credentials.json");
 
 module.exports = {
 	solidity: {
@@ -33,10 +33,6 @@ module.exports = {
 		overwrite: true,
 		runOnCompile: true,
 	},
-	// gasReporter: {
-	//     currency: 'USD',
-	//     gasPrice: 1
-	// },
 	defaultNetwork: "hardhat",
 	mocha: {
 		timeout: 1000000000000,
