@@ -32,9 +32,9 @@ $ npm install --save-dev erc721a
 ## Usage
 
 ```sh
-$ npx hardhat compile
-$ npx hardhat node
-$ npx hardhat test --localhost
+$ npx hardhat compile // Compile Code
+$ npx hardhat node // Start localhost test accounts
+$ npx hardhat test --localhost // Local Deployment & Testing
 ```
 
 ### Generator
