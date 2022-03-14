@@ -2,14 +2,11 @@ Tiger NFT ERC721
 
 # The Tiger Clan
 
-## Table of Contents
-
 - [Background](#background)
 - [Install](#install)
+- [Usage](#usage)
 
-## Background
-
-## Setup
+## Install
 
 This project uses hardhat
 
