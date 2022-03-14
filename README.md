@@ -17,7 +17,6 @@ Tiger NFT ERC721
 
 ## Background
 
-
 ## Setup
 
 This project uses hardhat
@@ -27,7 +26,6 @@ $ npm i -j hardhat
 $ npm i --save-dev @nomiclabs/hardhat-ethers ethers @nomiclabs/hardhat-waffle ethereum-waffle chai @openzeppelin contracts @nomiclabs/hardhat-etherscan @nomiclabs/hardhat-truffle5
 $ npm install --save-dev erc721a
 ```
-
 
 ## Usage
 
@@ -39,27 +37,15 @@ $ npx hardhat test --localhost // Local Deployment & Testing
 
 ### Generator
 
-
 ## Badge
 
 ## Example Readmes
 
-
 ## Related Efforts
-
 
 ## Maintainers
 
-
 ## Contributing
 
-
-
 ### Contributors
-
-
-
-
-## License
-
 
