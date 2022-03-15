@@ -1,6 +1,5 @@
 const { ethers } = require("hardhat");
 const CONFIG = require("../credentials.json");
-//const truffleContract = require('@truffle/contract');
 
 contract("NFT deployment", () => {
 	let nft;
