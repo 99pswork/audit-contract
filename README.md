@@ -21,4 +21,6 @@ $ npm install --save-dev erc721a
 $ npx hardhat compile // Compile Code
 $ npx hardhat node // Start localhost test accounts
 $ npx hardhat test --localhost // Local Deployment & Testing
+$ npx hardhat test scripts/NFT-deploy.js --network rinkeby  // RinkeBy Testnet Deployment
+$ npx hardhat test scripts/NFT-deploy.js --network mainnet  // Main-net Deployment
 ```
