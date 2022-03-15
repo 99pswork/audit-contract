@@ -1,5 +1,6 @@
 const { ethers } = require("hardhat");
-const CONFIG = require("../scripts/credentials.json");
+const CONFIG = require("../credentials.json");
+//const truffleContract = require('@truffle/contract');
 
 contract("NFT deployment", () => {
 	let nft;
@@ -9,8 +10,15 @@ contract("NFT deployment", () => {
 	);
 
 	before(async () => {
-		const NFT = await ethers.getContractFactory("NFT");
-		nft = await NFT.deploy();
+    const NFT = await ethers.getContractFactory("TheTigerClan");
+		nft = await NFT.deploy(
+			"Tiger",
+			"TIGER",
+			"150000000000000000",
+			"200000000000000000",
+			12
+		);
+		//nft = await NFT.deploy();
 		await nft.deployed();
 
 		console.log("NFT deployed at address: ", nft.address);
@@ -20,8 +28,4 @@ contract("NFT deployment", () => {
 		console.log("NFT deployed at address: ", nft.address);
 	});
 
-	it("Should check for contract's ownership!", async function () {
-		console.log(await nft.owner());
-		expect(await nft.owner()).to.equal("");
-	});
 });

@@ -3,7 +3,7 @@ const { ethers } = require("hardhat");
 
 describe("NFT", function () {
 	before(async () => {
-		const NFT = await ethers.getContractFactory("TigerNFT");
+		const NFT = await ethers.getContractFactory("TheTigerClan");
 		nft = await NFT.deploy(
 			"Tiger",
 			"TIGER",
