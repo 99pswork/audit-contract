@@ -1,3 +1,8 @@
+// SPDX-License-Identifier: MIT
+// NFT Count 10000
+
+pragma solidity ^0.8.4;
+
 import '@openzeppelin/contracts/token/ERC721/ERC721.sol';
 import '@openzeppelin/contracts/access/Ownable.sol';
 import '@openzeppelin/contracts/security/ReentrancyGuard.sol';
@@ -5,17 +10,11 @@ import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "erc721a/contracts/ERC721A.sol";
 
-// SPDX-License-Identifier: MIT
-
-pragma solidity ^0.8.4;
-
-// NFT Count 10000
-
 contract TheTigerClan is ERC721A, Ownable, ReentrancyGuard {
     using SafeMath for uint256;
     using Strings for uint256;
 
-    bool public preSaleActive = false;
+    bool public preSaleActive = true;
     bool public publicSaleActive = false;
 
     bool public paused = true;
@@ -29,8 +28,6 @@ contract TheTigerClan is ERC721A, Ownable, ReentrancyGuard {
     
     string public NETWORK_PROVENANCE = "";
     string public notRevealedUri;
-
-    uint256 public raffleReward = 1000000000000000000; // 1 ETH 
 
     constructor(string memory name, string memory symbol, uint256 _preSalePrice, uint256 _publicSalePrice, uint256 _maxSupply) ERC721A(name, symbol) ReentrancyGuard() {
         preSalePrice = _preSalePrice;
@@ -78,10 +75,12 @@ contract TheTigerClan is ERC721A, Ownable, ReentrancyGuard {
 
     function togglePreSale() external onlyOwner {
         preSaleActive = !preSaleActive;
+        publicSaleActive = false;
     }
 
     function togglePublicSale() external onlyOwner {
         publicSaleActive = !publicSaleActive;
+        preSaleActive = false;
     }
 
     function setPreSalePrice(uint256 _preSalePrice) external onlyOwner {
@@ -108,7 +107,6 @@ contract TheTigerClan is ERC721A, Ownable, ReentrancyGuard {
         payable(msg.sender).transfer(balance);
     }
 
-
     function setProvenanceHash(string memory provenanceHash) external onlyOwner {
         NETWORK_PROVENANCE = provenanceHash;
     }
@@ -116,7 +114,6 @@ contract TheTigerClan is ERC721A, Ownable, ReentrancyGuard {
     function setNotRevealedURI(string memory _notRevealedUri) external onlyOwner {
         notRevealedUri = _notRevealedUri;
     }
-
 
     function raffleNumberGenerator(uint _limit) public view returns(uint256) {
         uint256 seed = uint256(keccak256(abi.encodePacked(
