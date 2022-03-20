@@ -9,7 +9,9 @@ describe("NFT", function () {
 			"TIGER",
 			"150000000000000000",
 			"200000000000000000",
-			12
+			12,
+			2,
+			5
 		);
 		await nft.deployed();
 
@@ -34,8 +36,6 @@ describe("NFT", function () {
 	});
 
 	it("Check Pre Sale State", async function () {
-		expect(await nft.preSaleActive()).to.equal(false);
-		await nft.togglePreSale();
 		expect(await nft.preSaleActive()).to.equal(true);
 		await nft.togglePreSale();
 	});

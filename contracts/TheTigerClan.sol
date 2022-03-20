@@ -24,15 +24,20 @@ contract TheTigerClan is ERC721A, Ownable, ReentrancyGuard {
     uint256 public preSalePrice; 
     uint256 public publicSalePrice; 
 
+    uint256 public maxPreSale;
+    uint256 public maxPublicSale;
+
     string private _baseURIextended;
     
     string public NETWORK_PROVENANCE = "";
     string public notRevealedUri;
 
-    constructor(string memory name, string memory symbol, uint256 _preSalePrice, uint256 _publicSalePrice, uint256 _maxSupply) ERC721A(name, symbol) ReentrancyGuard() {
+    constructor(string memory name, string memory symbol, uint256 _preSalePrice, uint256 _publicSalePrice, uint256 _maxSupply, uint256 _maxPreSale, uint256 _maxPublicSale) ERC721A(name, symbol) ReentrancyGuard() {
         preSalePrice = _preSalePrice;
         publicSalePrice = _publicSalePrice;
         maxSupply = _maxSupply;
+        maxPreSale = _maxPreSale;
+        maxPublicSale = _maxPublicSale;
     }
 
     function _startTokenId() internal view virtual override returns (uint256) {
@@ -41,11 +46,13 @@ contract TheTigerClan is ERC721A, Ownable, ReentrancyGuard {
 
     function preSaleMint(uint256 _amount) external payable nonReentrant{
         require(preSaleActive, "TTC Pre Sale is not Active");
+        require(balanceOf(msg.sender).add(_amount) <= maxPreSale, "TTC Maximum Pre Sale Minting Limit Reached");
         mint(_amount, true);
     }
 
     function publicSaleMint(uint256 _amount) external payable nonReentrant {
         require(publicSaleActive, "TTC Public Sale is not Active");
+        require(balanceOf(msg.sender).add(_amount) <= maxPublicSale, "TTC Maximum Minting Limit Reached");
         mint(_amount, false);
     }
 
