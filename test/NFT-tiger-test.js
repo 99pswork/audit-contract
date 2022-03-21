@@ -55,7 +55,6 @@ describe("NFT", function () {
 		).to.be.revertedWith("TTC Pre Sale is not Active");
 
 		await nft.togglePreSale();
-
 		await expect(
 			nft
 				.connect(accounts[1])

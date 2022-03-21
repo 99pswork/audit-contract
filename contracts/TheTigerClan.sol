@@ -32,6 +32,8 @@ contract TheTigerClan is ERC721A, Ownable, ReentrancyGuard {
     string public NETWORK_PROVENANCE = "";
     string public notRevealedUri;
 
+    mapping(address => uint256) public nftMinted;
+
     constructor(string memory name, string memory symbol, uint256 _preSalePrice, uint256 _publicSalePrice, uint256 _maxSupply, uint256 _maxPreSale, uint256 _maxPublicSale) ERC721A(name, symbol) ReentrancyGuard() {
         preSalePrice = _preSalePrice;
         publicSalePrice = _publicSalePrice;
@@ -46,13 +48,13 @@ contract TheTigerClan is ERC721A, Ownable, ReentrancyGuard {
 
     function preSaleMint(uint256 _amount) external payable nonReentrant{
         require(preSaleActive, "TTC Pre Sale is not Active");
-        require(balanceOf(msg.sender).add(_amount) <= maxPreSale, "TTC Maximum Pre Sale Minting Limit Reached");
+        require(nftMinted[msg.sender].add(_amount) <= maxPreSale, "TTC Maximum Pre Sale Minting Limit Reached");
         mint(_amount, true);
     }
 
     function publicSaleMint(uint256 _amount) external payable nonReentrant {
         require(publicSaleActive, "TTC Public Sale is not Active");
-        require(balanceOf(msg.sender).add(_amount) <= maxPublicSale, "TTC Maximum Minting Limit Reached");
+        require(nftMinted[msg.sender].add(_amount) <= maxPublicSale, "TTC Maximum Minting Limit Reached");
         mint(_amount, false);
     }
 
@@ -65,6 +67,7 @@ contract TheTigerClan is ERC721A, Ownable, ReentrancyGuard {
         else{
             require(publicSalePrice*amount <= msg.value, "TTC ETH Value Sent for Public Sale is not enough");
         }
+        nftMinted[msg.sender] = nftMinted[msg.sender].add(amount);
         _safeMint(msg.sender, amount);
     }
 
