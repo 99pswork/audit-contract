@@ -9,9 +9,7 @@ describe("NFT", function () {
 			"TIGER",
 			"150000000000000000",
 			"200000000000000000",
-			16,
-			3,
-			5
+			16
 		);
 		await nft.deployed();
 
@@ -37,14 +35,14 @@ describe("NFT", function () {
 
 	it("Check Pre Sale State", async function () {
 		expect(await nft.preSaleActive()).to.equal(true);
-		await nft.togglePreSale();
+		await nft.toggleSaleMode();
 	});
 
 	it("Check Public Sale State", async function () {
-		expect(await nft.publicSaleActive()).to.equal(false);
-		await nft.togglePublicSale();
 		expect(await nft.publicSaleActive()).to.equal(true);
-		await nft.togglePublicSale();
+		await nft.toggleSaleMode();
+		expect(await nft.publicSaleActive()).to.equal(false);
+		await nft.toggleSaleMode();
 	});
 
 	it("Check Pre Sale Mint", async function () {
@@ -52,7 +50,7 @@ describe("NFT", function () {
 		.preSaleMint(1, { value: ethers.utils.parseEther("0.15") }))
 		.to.be.revertedWith("TTC Pre Sale is not Active");
 
-		await nft.togglePreSale();
+		await nft.toggleSaleMode();
 		
 		await expect(nft.connect(accounts[1])
 		.preSaleMint(1, { value: ethers.utils.parseEther("0.15") }))
@@ -81,7 +79,7 @@ describe("NFT", function () {
 				.connect(accounts[1])
 				.publicSaleMint(1, { value: ethers.utils.parseEther("0.15") })
 		).to.be.revertedWith("TTC Public Sale is not Active");
-		await nft.togglePublicSale();
+		await nft.toggleSaleMode();
 
 		await nft
 			.connect(accounts[1])

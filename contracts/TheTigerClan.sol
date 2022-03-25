@@ -24,8 +24,8 @@ contract TheTigerClan is ERC721A, Ownable, ReentrancyGuard {
     uint256 public preSalePrice; 
     uint256 public publicSalePrice; 
 
-    uint256 public maxPreSale;
-    uint256 public maxPublicSale;
+    uint256 public maxPreSale = 3;
+    uint256 public maxPublicSale = 5;
 
     string private _baseURIextended;
     
@@ -34,12 +34,10 @@ contract TheTigerClan is ERC721A, Ownable, ReentrancyGuard {
 
     mapping(address => uint256) public nftMinted;
 
-    constructor(string memory name, string memory symbol, uint256 _preSalePrice, uint256 _publicSalePrice, uint256 _maxSupply, uint256 _maxPreSale, uint256 _maxPublicSale) ERC721A(name, symbol) ReentrancyGuard() {
+    constructor(string memory name, string memory symbol, uint256 _preSalePrice, uint256 _publicSalePrice, uint256 _maxSupply) ERC721A(name, symbol) ReentrancyGuard() {
         preSalePrice = _preSalePrice;
         publicSalePrice = _publicSalePrice;
         maxSupply = _maxSupply;
-        maxPreSale = _maxPreSale;
-        maxPublicSale = _maxPublicSale;
     }
 
     function _startTokenId() internal view virtual override returns (uint256) {
@@ -90,14 +88,9 @@ contract TheTigerClan is ERC721A, Ownable, ReentrancyGuard {
         paused = !paused;
     }
 
-    function togglePreSale() external onlyOwner {
+    function toggleSaleMode() external onlyOwner {
         preSaleActive = !preSaleActive;
-        publicSaleActive = false;
-    }
-
-    function togglePublicSale() external onlyOwner {
         publicSaleActive = !publicSaleActive;
-        preSaleActive = false;
     }
 
     function setPreSalePrice(uint256 _preSalePrice) external onlyOwner {
@@ -122,10 +115,6 @@ contract TheTigerClan is ERC721A, Ownable, ReentrancyGuard {
     function withdrawTotal() external onlyOwner {
         uint balance = address(this).balance;
         payable(msg.sender).transfer(balance);
-    }
-
-    function setProvenanceHash(string memory provenanceHash) external onlyOwner {
-        NETWORK_PROVENANCE = provenanceHash;
     }
 
     function setNotRevealedURI(string memory _notRevealedUri) external onlyOwner {
