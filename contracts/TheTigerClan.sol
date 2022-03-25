@@ -46,6 +46,13 @@ contract TheTigerClan is ERC721A, Ownable, ReentrancyGuard {
         return 1;
     }
 
+    function ownerMint(uint256 _amount) external onlyOwner {
+        require(!paused, "TTC Minting is Paused");
+        require(totalSupply().add(_amount) <= maxSupply, "TTC Maximum Supply Reached");
+        nftMinted[msg.sender] = nftMinted[msg.sender].add(_amount);
+        _safeMint(msg.sender, _amount);
+    }
+
     function preSaleMint(uint256 _amount) external payable nonReentrant{
         require(preSaleActive, "TTC Pre Sale is not Active");
         require(nftMinted[msg.sender].add(_amount) <= maxPreSale, "TTC Maximum Pre Sale Minting Limit Reached");
