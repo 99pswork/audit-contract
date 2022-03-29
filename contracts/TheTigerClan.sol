@@ -20,35 +20,21 @@ contract TheTigerClan is ERC721A, Ownable, ReentrancyGuard {
     bool public paused = true;
     bool public revealed = false;
 
-    uint256 public maxSupply; 
-    uint256 public preSalePrice; 
-    uint256 public publicSalePrice; 
-
-    uint256 public maxPreSale = 3;
-    uint256 public maxPublicSale = 5;
+    uint256 public maxSupply = 10000; 
+    uint256 public maxPreSale = 10;
+    uint256 public preSalePrice = 0.15 ether; 
+    uint256 public publicSalePrice = 0.2 ether;  
 
     string private _baseURIextended;
-    
-    string public NETWORK_PROVENANCE = "";
     string public notRevealedUri;
 
     mapping(address => uint256) public nftMinted;
 
-    constructor(string memory name, string memory symbol, uint256 _preSalePrice, uint256 _publicSalePrice, uint256 _maxSupply) ERC721A(name, symbol) ReentrancyGuard() {
-        preSalePrice = _preSalePrice;
-        publicSalePrice = _publicSalePrice;
-        maxSupply = _maxSupply;
+    constructor(string memory name, string memory symbol) ERC721A(name, symbol) ReentrancyGuard() {
     }
 
     function _startTokenId() internal view virtual override returns (uint256) {
         return 1;
-    }
-
-    function ownerMint(uint256 _amount) external onlyOwner {
-        require(!paused, "TTC Minting is Paused");
-        require(totalSupply().add(_amount) <= maxSupply, "TTC Maximum Supply Reached");
-        nftMinted[msg.sender] = nftMinted[msg.sender].add(_amount);
-        _safeMint(msg.sender, _amount);
     }
 
     function preSaleMint(uint256 _amount) external payable nonReentrant{
@@ -59,7 +45,6 @@ contract TheTigerClan is ERC721A, Ownable, ReentrancyGuard {
 
     function publicSaleMint(uint256 _amount) external payable nonReentrant {
         require(publicSaleActive, "TTC Public Sale is not Active");
-        require(nftMinted[msg.sender].add(_amount) <= maxPublicSale, "TTC Maximum Minting Limit Reached");
         mint(_amount, false);
     }
 

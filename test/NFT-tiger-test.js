@@ -6,10 +6,7 @@ describe("NFT", function () {
 		const NFT = await ethers.getContractFactory("TheTigerClan");
 		nft = await NFT.deploy(
 			"Tiger",
-			"TIGER",
-			"150000000000000000",
-			"200000000000000000",
-			16
+			"TIGER"
 		);
 		await nft.deployed();
 

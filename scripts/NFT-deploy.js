@@ -7,10 +7,7 @@ contract("NFT deployment", () => {
     const NFT = await ethers.getContractFactory("TheTigerClan");
 		nft = await NFT.deploy(
 			"Tiger",
-			"TIGER",
-			"150000000000000000",
-			"200000000000000000",
-			12
+			"TIGER"
 		);
 		await nft.deployed();
 
