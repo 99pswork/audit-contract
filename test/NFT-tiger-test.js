@@ -63,11 +63,14 @@ describe("NFT", function () {
 
 		await nft.connect(accounts[2]).preSaleMint(2, { value: ethers.utils.parseEther("0.3") });
 
+		await nft.connect(accounts[2]).preSaleMint(8, { value: ethers.utils.parseEther("1.2") });
+
 		await expect(nft.connect(accounts[2])
-		.preSaleMint(2, { value: ethers.utils.parseEther("0.3") }))
+		.preSaleMint(1, { value: ethers.utils.parseEther("0.15") }))
 		.to.be.revertedWith("TTC Maximum Pre Sale Minting Limit Reached");
 
-		await nft.connect(accounts[2]).preSaleMint(1, { value: ethers.utils.parseEther("0.15") });
+		await nft.connect(accounts[3]).preSaleMint(10, { value: ethers.utils.parseEther("1.5") });
+
 	});
 
 	it("Check Public Sale Mint", async function () {
@@ -80,16 +83,16 @@ describe("NFT", function () {
 
 		await nft
 			.connect(accounts[1])
-			.publicSaleMint(1, { value: ethers.utils.parseEther("0.2") });
+			.publicSaleMint(1, { value: ethers.utils.parseEther("0.18") });
 		await nft
 			.connect(accounts[5])
-			.publicSaleMint(1, { value: ethers.utils.parseEther("0.2") });
+			.publicSaleMint(1, { value: ethers.utils.parseEther("0.18") });
 		expect(await nft.balanceOf(accounts[5].address)).to.equal(1);
 		await nft
 			.connect(accounts[5])
-			.publicSaleMint(4, { value: ethers.utils.parseEther("0.8") });
+			.publicSaleMint(4, { value: ethers.utils.parseEther("0.72") });
 		
-		expect(await nft.totalSupply()).to.equal(10);
+		expect(await nft.totalSupply()).to.equal(27);
 
 		expect(await nft.tokenURI(1)).to.equal("");
 
@@ -97,12 +100,8 @@ describe("NFT", function () {
 
 		expect(await nft.tokenURI(1)).to.equal("test.png");
 		expect(await nft.tokenURI(await nft.totalSupply())).to.equal("test.png");
-		
-		await expect(nft.connect(accounts[2])
-		.publicSaleMint(3, { value: ethers.utils.parseEther("0.6") }))
-		.to.be.revertedWith("TTC Maximum Minting Limit Reached");
 
-		await nft.connect(accounts[2]).publicSaleMint(2, { value: ethers.utils.parseEther("0.4") });
+		await nft.connect(accounts[2]).publicSaleMint(2, { value: ethers.utils.parseEther("0.36") });
 	});
 
 	it("Check Air Drop Functionality", async function () {
@@ -110,15 +109,6 @@ describe("NFT", function () {
 
 		balanceAcc1 = await nft.balanceOf(accounts[2].address);
 		await nft.airDrop([accounts[2].address, accounts[2].address]);
-
-		await expect(nft.airDrop([accounts[4].address])).to.be.revertedWith(
-			"TTC Maximum Supply Reached"
-		);
-		await expect(
-			nft
-				.connect(accounts[8])
-				.publicSaleMint(1, { value: ethers.utils.parseEther("0.2") })
-		).to.be.revertedWith("TTC Maximum Supply Reached");
 
 		expect(await nft.balanceOf(accounts[2].address)).to.equal(
 			parseInt(balanceAcc1) + 2

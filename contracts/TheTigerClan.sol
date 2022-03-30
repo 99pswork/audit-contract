@@ -23,7 +23,7 @@ contract TheTigerClan is ERC721A, Ownable, ReentrancyGuard {
     uint256 public maxSupply = 10000; 
     uint256 public maxPreSale = 10;
     uint256 public preSalePrice = 0.15 ether; 
-    uint256 public publicSalePrice = 0.2 ether;  
+    uint256 public publicSalePrice = 0.18 ether;  
 
     string private _baseURIextended;
     string public notRevealedUri;
