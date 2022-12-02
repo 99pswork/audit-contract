@@ -11,3 +11,6 @@ credentials.json
 ipfs/
 NFT.sol
 .DS_Store
+**slither**
+**scripts**
+**test**
