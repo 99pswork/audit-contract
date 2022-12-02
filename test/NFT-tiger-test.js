@@ -1,126 +1,138 @@
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
-const provider = new ethers.providers.JsonRpcProvider("http://127.0.0.1:8545"); 
 
 describe("NFT", function () {
+	before(async () => {
+		const NFT = await ethers.getContractFactory("TheTigerClan");
+		nft = await NFT.deploy(
+			"Tiger",
+			"TIGER"
+		);
+		await nft.deployed();
 
-  before(async() =>{
-    const NFT = await ethers.getContractFactory("TigerNFT");
-    nft = await NFT.deploy("Tiger", "TIGER", "150000000000000000", "200000000000000000", 12);
-    await nft.deployed();
+		accounts = await ethers.getSigners();
+	});
 
+	it("Should check for contract's ownership!", async function () {
+		expect(await nft.owner()).to.equal(accounts[0].address);
+	});
 
-    accounts = await ethers.getSigners();
-    
-  })
+	it("Check Base URI Before Reveal", async function () {
+		await expect(nft.tokenURI(0)).to.be.revertedWith(
+			"TTC URI For Token Non-existent"
+		);
+	});
 
-    it("Should check for contract's ownership!", async function () {
-        expect(await nft.owner()).to.equal(accounts[0].address);
-    });
+	it("Check Status Paused", async function () {
+		expect(await nft.paused()).to.equal(true);
+		await nft.togglePauseState();
+		expect(await nft.paused()).to.equal(false);
+		await nft.togglePauseState();
+	});
 
-    it("Check Base URI Before Reveal", async function() {
-        await expect(nft.tokenURI(0)).to.be.revertedWith("NFT-Tiger URI For Token Non-existent");
-    });
+	it("Check Pre Sale State", async function () {
+		expect(await nft.preSaleActive()).to.equal(true);
+		await nft.toggleSaleMode();
+	});
 
-    it("Check Status Paused", async function () {
-        expect(await nft.paused()).to.equal(true);
-        await nft.togglePauseState();
-        expect(await nft.paused()).to.equal(false);
-        await nft.togglePauseState();
-    })
+	it("Check Public Sale State", async function () {
+		expect(await nft.publicSaleActive()).to.equal(true);
+		await nft.toggleSaleMode();
+		expect(await nft.publicSaleActive()).to.equal(false);
+		await nft.toggleSaleMode();
+	});
 
-    it("Check Pre Sale State", async function() {
-        expect(await nft.preSaleActive()).to.equal(false);
-        await nft.togglePreSale();
-        expect(await nft.preSaleActive()).to.equal(true);
-        await nft.togglePreSale();
-    })
+	it("Check Pre Sale Mint", async function () {
+		await expect(nft.connect(accounts[1])
+		.preSaleMint(1, { value: ethers.utils.parseEther("0.15") }))
+		.to.be.revertedWith("TTC Pre Sale is not Active");
 
-    it("Check Public Sale State", async function() {
-        expect(await nft.publicSaleActive()).to.equal(false);
-        await nft.togglePublicSale();
-        expect(await nft.publicSaleActive()).to.equal(true);
-        await nft.togglePublicSale();
-    })
+		await nft.toggleSaleMode();
+		
+		await expect(nft.connect(accounts[1])
+		.preSaleMint(1, { value: ethers.utils.parseEther("0.15") }))
+		.to.be.revertedWith("TTC Minting is Paused");
 
+		await nft.togglePauseState();
 
-    it("Check Pre Sale Mint", async function() {
-        await expect(nft.connect(accounts[1])
-        .preSaleMint(1, {value: ethers.utils.parseEther("0.15")}))
-        .to.be.revertedWith("NFT-Tiger Pre Sale is not Active");
+		await nft.connect(accounts[1]).preSaleMint(1, { value: ethers.utils.parseEther("0.15") });
 
-        await nft.togglePreSale();
+		await expect(nft.connect(accounts[2])
+		.preSaleMint(1, { value: ethers.utils.parseEther("0.10") }))
+		.to.be.revertedWith("TTC ETH Value Sent for Pre Sale is not enough");
 
-        await expect(nft.connect(accounts[1])
-        .preSaleMint(1, {value: ethers.utils.parseEther("0.15")}))
-        .to.be.revertedWith("NFT-Tiger Minting is Paused");
+		await nft.connect(accounts[2]).preSaleMint(2, { value: ethers.utils.parseEther("0.3") });
 
-        await nft.togglePauseState();
+		await nft.connect(accounts[2]).preSaleMint(8, { value: ethers.utils.parseEther("1.2") });
 
-        await nft.connect(accounts[1]).preSaleMint(1, {value: ethers.utils.parseEther("0.15")});
+		await expect(nft.connect(accounts[2])
+		.preSaleMint(1, { value: ethers.utils.parseEther("0.15") }))
+		.to.be.revertedWith("TTC Maximum Pre Sale Minting Limit Reached");
 
-        await expect(nft.connect(accounts[2])
-        .preSaleMint(1, {value: ethers.utils.parseEther("0.10")}))
-        .to.be.revertedWith("NFT-Tiger ETH Value Sent for Pre Sale is not enough");
+		await nft.connect(accounts[3]).preSaleMint(10, { value: ethers.utils.parseEther("1.5") });
 
-        await nft.connect(accounts[2]).preSaleMint(1, {value: ethers.utils.parseEther("0.25")});
+	});
 
-    })
+	it("Check Public Sale Mint", async function () {
+		await expect(
+			nft
+				.connect(accounts[1])
+				.publicSaleMint(1, { value: ethers.utils.parseEther("0.15") })
+		).to.be.revertedWith("TTC Public Sale is not Active");
+		await nft.toggleSaleMode();
 
-    it('Check Public Sale Mint', async function() {
-        await expect(nft.connect(accounts[1])
-        .publicSaleMint(1, {value: ethers.utils.parseEther("0.15")}))
-        .to.be.revertedWith("NFT-Tiger Public Sale is not Active");
-        await nft.togglePublicSale();
+		await nft
+			.connect(accounts[1])
+			.publicSaleMint(1, { value: ethers.utils.parseEther("0.18") });
+		await nft
+			.connect(accounts[5])
+			.publicSaleMint(1, { value: ethers.utils.parseEther("0.18") });
+		expect(await nft.balanceOf(accounts[5].address)).to.equal(1);
+		await nft
+			.connect(accounts[5])
+			.publicSaleMint(4, { value: ethers.utils.parseEther("0.72") });
+		
+		expect(await nft.totalSupply()).to.equal(27);
 
-        await nft.connect(accounts[1]).publicSaleMint(1, {value: ethers.utils.parseEther("0.2")});
-        await nft.connect(accounts[5]).publicSaleMint(1, {value: ethers.utils.parseEther("0.2")});
-        expect(await nft.balanceOf(accounts[5].address)).to.equal(1);
-        await nft.connect(accounts[5]).publicSaleMint(4, {value: ethers.utils.parseEther("0.8")});
-        expect(await nft.totalSupply()).to.equal(8);
+		expect(await nft.tokenURI(1)).to.equal("");
 
-        expect(await nft.tokenURI(1)).to.equal("");
+		await nft.setNotRevealedURI("test.png");
 
-        await nft.setNotRevealedURI("test.png");
+		expect(await nft.tokenURI(1)).to.equal("test.png");
+		expect(await nft.tokenURI(await nft.totalSupply())).to.equal("test.png");
 
-        expect(await nft.tokenURI(1)).to.equal("test.png");
-        expect(await nft.tokenURI(await nft.totalSupply())).to.equal("test.png");
-    })
+		await nft.connect(accounts[2]).publicSaleMint(2, { value: ethers.utils.parseEther("0.36") });
+	});
 
-    it('Check Air Drop Functionality', async function() {
-        
-        await nft.airDrop([accounts[2].address, accounts[3].address]);
-        
-        balanceAcc1 = await nft.balanceOf(accounts[2].address);
-        await nft.airDrop([accounts[2].address, accounts[2].address]);
-        
-        await expect(nft.airDrop([accounts[4].address])).to.be.revertedWith("NFT-Tiger Maximum Supply Reached");
-        await expect(nft.connect(accounts[8]).publicSaleMint(1, {value: ethers.utils.parseEther("0.2")}))
-        .to.be.revertedWith("NFT-Tiger Maximum Supply Reached");
-        
-        expect(await nft.balanceOf(accounts[2].address)).to.equal(parseInt(balanceAcc1)+2);
+	it("Check Air Drop Functionality", async function () {
+		await nft.airDrop([accounts[5].address, accounts[3].address]);
 
-    })
+		balanceAcc1 = await nft.balanceOf(accounts[2].address);
+		await nft.airDrop([accounts[2].address, accounts[2].address]);
 
-    it('Check Random Number Generator', async function() {
-        randNumber = await nft.raffleNumberGenerator(8888);
-        expect(parseInt(randNumber)).to.be.lessThan(8889);
-        randNumber2 = await nft.raffleNumberGenerator(20);
-        expect(parseInt(randNumber2)).to.be.lessThan(21);
-        randNumber3 = await nft.raffleNumberGenerator(200);
-        expect(parseInt(randNumber3)).to.be.lessThan(201);
-    })
+		expect(await nft.balanceOf(accounts[2].address)).to.equal(
+			parseInt(balanceAcc1) + 2
+		);
+	});
 
-    it('Withdraw money to owner Account', async function() {
-        bal1 = await web3.eth.getBalance(accounts[0].address);
-        await expect(nft.connect(accounts[1])
-        .withdrawTotal())
-        .to.be.revertedWith("Ownable: caller is not the owner");
+	it("Check Random Number Generator", async function () {
+		randNumber = await nft.raffleNumberGenerator(8888);
+		expect(parseInt(randNumber)).to.be.lessThan(8889);
+		randNumber2 = await nft.raffleNumberGenerator(20);
+		expect(parseInt(randNumber2)).to.be.lessThan(21);
+		randNumber3 = await nft.raffleNumberGenerator(200);
+		expect(parseInt(randNumber3)).to.be.lessThan(201);
+	});
 
-        await nft.withdrawTotal();
+	it("Withdraw money to owner Account", async function () {
+		bal1 = await web3.eth.getBalance(accounts[0].address);
+		await expect(nft.connect(accounts[1]).withdrawTotal()).to.be.revertedWith(
+			"Ownable: caller is not the owner"
+		);
 
-        contractBal = await web3.eth.getBalance(nft.address);
-        expect(contractBal).to.equal(ethers.utils.parseEther("0.0"));
-    })
-        
+		await nft.withdrawTotal();
+
+		contractBal = await web3.eth.getBalance(nft.address);
+		expect(contractBal).to.equal(ethers.utils.parseEther("0.0"));
+	});
 });
