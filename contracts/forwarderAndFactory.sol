@@ -12,7 +12,7 @@ contract Forwarder {
 
     address public owner;
 
-    constructor(address _owner) {
+    constructor(address _owner) public {
             owner = _owner;
     }
 
@@ -64,7 +64,7 @@ contract ForwarderFactory {
   uint256 public amountTemp;
   address[] public accountList;
 
-  constructor() {
+  constructor() public {
           owner = msg.sender;
   }
   modifier onlyOwner {
